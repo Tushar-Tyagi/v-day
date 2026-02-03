@@ -185,9 +185,97 @@
             margin-top: 1rem;
             font-style: italic;
         }
+
+        /* Cursor trail sparkles */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5rem;
+            animation: sparkleFloat 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.5);
+            }
+        }
+
+        /* Reasons list */
+        .reasons-list {
+            position: fixed;
+            right: -350px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+            width: 320px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: right 0.5s ease;
+            z-index: 100;
+        }
+
+        .reasons-list.show {
+            right: 0;
+        }
+
+        .reasons-list h3 {
+            color: #ff1744;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .reasons-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reasons-list li {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: linear-gradient(45deg, #ffe3e3, #ffd6e8);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: #333;
+            animation: slideIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Make NO button absolutely positioned for better mouse escape */
+        #noBtn {
+            position: absolute;
+            transition: all 0.1s ease;
+        }
+
+        .buttons {
+            position: relative;
+            min-height: 60px;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
+    <!-- Reasons to Say Yes List -->
+    <div class="reasons-list" id="reasonsList">
+        <h3>🌹 Reasons to Say YES 🌹</h3>
+        <ul id="reasonsItems"></ul>
+    </div>
+
     <div class="container">
         <div class="counter">No clicks: <span id="noCount">0</span></div>
         
@@ -206,7 +294,7 @@
         <div id="celebration" class="celebration hidden">
             <h2>🎉 YAAAAY! 🎉</h2>
             <p>I knew you'd say yes! You just made me the happiest person ever! 😍</p>
-            <img class="gif" src="https://media.giphy.com/media/g5R9dok94mrIvplmZd/giphy.gif" alt="celebration">
+            <img class="gif" src="https://media1.tenor.com/m/FcukYBYV8sgAAAAC/friends-phoebe.gif" alt="celebration">
             <p style="font-size: 2rem;">❤️💕💖✨🎊</p>
             <p>Get ready for the best Valentine's Day ever! 🥰</p>
         </div>
@@ -220,6 +308,8 @@
         const celebration = document.getElementById('celebration');
         const noCountDisplay = document.getElementById('noCount');
         const warning = document.getElementById('warning');
+        const reasonsList = document.getElementById('reasonsList');
+        const reasonsItems = document.getElementById('reasonsItems');
 
         const warnings = [
             "Wait... are you sure? 🤔",
@@ -238,6 +328,85 @@
             "Fun fact: 99.9% of people click YES eventually 📊",
             "You're in the 0.1%... for now 😈"
         ];
+
+        const reasons = [
+            "💕 I'll make you laugh every single day",
+            "🍫 Unlimited chocolate privileges",
+            "🎬 Movie nights with all your favorite snacks",
+            "☕ I'll bring you coffee in bed",
+            "🌹 Random flowers just because",
+            "🎵 Dance parties in the kitchen",
+            "🍕 Pizza dates whenever you want",
+            "💆 Free back massages on demand",
+            "🎮 I'll let you win at games... sometimes",
+            "🌟 You're literally perfect and I'm so lucky",
+            "🏠 Cozy nights in with blankets",
+            "🌮 Taco Tuesday (and every other day)",
+            "📸 I'll take all your Instagram photos",
+            "🎨 Support all your hobbies and dreams",
+            "😊 I'll always make you smile",
+            "🎁 Surprise dates and adventures",
+            "🍦 Ice cream runs at midnight",
+            "💌 Sweet notes and texts",
+            "🎤 I'll sing (badly) to make you laugh",
+            "❤️ I love you more than words can say"
+        ];
+
+        // Cursor trail sparkles
+        let lastSparkleTime = 0;
+        document.addEventListener('mousemove', function(e) {
+            const now = Date.now();
+            if (now - lastSparkleTime > 50) {
+                createSparkle(e.pageX, e.pageY);
+                lastSparkleTime = now;
+            }
+        });
+
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.innerHTML = ['✨', '💕', '⭐', '💖', '🌟'][Math.floor(Math.random() * 5)];
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1000);
+        }
+
+        // NO button runs away from mouse
+        let isNoBtnActive = true;
+        document.addEventListener('mousemove', function(e) {
+            if (!isNoBtnActive) return;
+            
+            const noBtnRect = noBtn.getBoundingClientRect();
+            const noBtnCenterX = noBtnRect.left + noBtnRect.width / 2;
+            const noBtnCenterY = noBtnRect.top + noBtnRect.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(e.clientX - noBtnCenterX, 2) + 
+                Math.pow(e.clientY - noBtnCenterY, 2)
+            );
+            
+            // If mouse is within 100px of the button, make it run away
+            if (distance < 100) {
+                const angle = Math.atan2(noBtnCenterY - e.clientY, noBtnCenterX - e.clientX);
+                const moveDistance = 100 - distance;
+                
+                let newX = Math.cos(angle) * moveDistance;
+                let newY = Math.sin(angle) * moveDistance;
+                
+                // Keep button within viewport bounds
+                const maxX = window.innerWidth - noBtnRect.width - 100;
+                const maxY = window.innerHeight - noBtnRect.height - 100;
+                
+                newX = Math.max(-maxX/2, Math.min(maxX/2, newX));
+                newY = Math.max(-maxY/2, Math.min(maxY/2, newY));
+                
+                noBtn.style.transform = `translate(${newX}px, ${newY}px)`;
+            }
+        });
 
         // Create floating hearts
         function createHeart() {
@@ -266,6 +435,8 @@
             questionSection.classList.add('hidden');
             celebration.classList.remove('hidden');
             celebration.style.display = 'block';
+            reasonsList.classList.remove('show');
+            isNoBtnActive = false;
             
             // Create confetti effect
             for (let i = 0; i < 50; i++) {
@@ -286,15 +457,18 @@
             const currentSize = 1 + (noClickCount * 0.1);
             yesBtn.style.transform = `scale(${currentSize})`;
 
-            // Make NO button move around randomly
-            const x = Math.random() * 200 - 100;
-            const y = Math.random() * 100 - 50;
-            noBtn.style.transform = `translate(${x}px, ${y}px)`;
-
-            // After 5 clicks, make NO button shrink
-            if (noClickCount > 5) {
-                const shrink = 1 - (noClickCount - 5) * 0.05;
-                noBtn.style.transform = `translate(${x}px, ${y}px) scale(${Math.max(shrink, 0.3)})`;
+            // Show reasons list after 3 clicks
+            if (noClickCount === 3) {
+                reasonsList.classList.add('show');
+                // Populate reasons with staggered animation
+                reasons.forEach((reason, index) => {
+                    setTimeout(() => {
+                        const li = document.createElement('li');
+                        li.textContent = reason;
+                        li.style.animationDelay = (index * 0.1) + 's';
+                        reasonsItems.appendChild(li);
+                    }, index * 100);
+                });
             }
 
             // After 10 clicks, make NO button start spinning
