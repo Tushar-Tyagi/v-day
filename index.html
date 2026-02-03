@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌹 An Important Question 🌹</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(45deg, #ff6b9d, #c06c84, #f67280, #ffa69e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 10s infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+            animation: bounce 2s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #ff1744;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: #333;
+            margin: 2rem 0;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(45deg, #ff6b9d, #ff1744);
+            color: white;
+            animation: wiggle 0.5s ease infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.2);
+            animation: none;
+        }
+
+        #noBtn {
+            background: #ddd;
+            color: #666;
+            position: relative;
+        }
+
+        #noBtn:hover {
+            background: #ccc;
+        }
+
+        .celebration {
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .celebration h2 {
+            font-size: 2.5rem;
+            color: #ff1744;
+            margin-bottom: 1rem;
+        }
+
+        .celebration p {
+            font-size: 1.3rem;
+            color: #333;
+            margin: 1rem 0;
+        }
+
+        .gif {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            margin: 1rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .counter {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #ff1744;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #ff1744;
+            font-size: 1rem;
+            margin-top: 1rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="counter">No clicks: <span id="noCount">0</span></div>
+        
+        <div id="question-section">
+            <h1>💝 Hey Beautiful! 💝</h1>
+            <p class="question">Will you be my Valentine? 🌹</p>
+            
+            <div class="buttons">
+                <button id="yesBtn">YES! 💕</button>
+                <button id="noBtn">No</button>
+            </div>
+            
+            <p class="warning" id="warning"></p>
+        </div>
+
+        <div id="celebration" class="celebration hidden">
+            <h2>🎉 YAAAAY! 🎉</h2>
+            <p>I knew you'd say yes! You just made me the happiest person ever! 😍</p>
+            <img class="gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWp6ZjBvOHBxeWp5ZDRwcmZ5dTM2Ym1qbHpoYjB6NmF1cnV0aG56YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26u4cqiYI30juCOGY/giphy.gif" alt="celebration">
+            <p style="font-size: 2rem;">❤️💕💖✨🎊</p>
+            <p>Get ready for the best Valentine's Day ever! 🥰</p>
+        </div>
+    </div>
+
+    <script>
+        let noClickCount = 0;
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionSection = document.getElementById('question-section');
+        const celebration = document.getElementById('celebration');
+        const noCountDisplay = document.getElementById('noCount');
+        const warning = document.getElementById('warning');
+
+        const warnings = [
+            "Wait... are you sure? 🤔",
+            "Really? Think about it... 💭",
+            "Come on, you know you want to say yes! 😏",
+            "The 'No' button is getting tired... 😴",
+            "Just click YES already! 😤",
+            "I'm going to keep asking... 🙃",
+            "Pretty please? 🥺",
+            "I'll buy you chocolate! 🍫",
+            "And flowers! 💐",
+            "Okay fine, I'll do the dishes for a week! 🧽",
+            "A MONTH! 😱",
+            "You're really testing me here... 😅",
+            "The YES button is feeling lonely... 💔",
+            "Fun fact: 99.9% of people click YES eventually 📊",
+            "You're in the 0.1%... for now 😈"
+        ];
+
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = ['❤️', '💕', '💖', '💗', '💝'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 15000);
+        }
+
+        // Create hearts periodically
+        setInterval(createHeart, 300);
+
+        // Initial hearts
+        for (let i = 0; i < 10; i++) {
+            createHeart();
+        }
+
+        yesBtn.addEventListener('click', function() {
+            questionSection.classList.add('hidden');
+            celebration.classList.remove('hidden');
+            celebration.style.display = 'block';
+            
+            // Create confetti effect
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createHeart, i * 50);
+            }
+        });
+
+        noBtn.addEventListener('click', function(e) {
+            noClickCount++;
+            noCountDisplay.textContent = noClickCount;
+            
+            // Show warning messages
+            if (noClickCount <= warnings.length) {
+                warning.textContent = warnings[noClickCount - 1];
+            }
+
+            // Make YES button bigger each time
+            const currentSize = 1 + (noClickCount * 0.1);
+            yesBtn.style.transform = `scale(${currentSize})`;
+
+            // Make NO button move around randomly
+            const x = Math.random() * 200 - 100;
+            const y = Math.random() * 100 - 50;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+            // After 5 clicks, make NO button shrink
+            if (noClickCount > 5) {
+                const shrink = 1 - (noClickCount - 5) * 0.05;
+                noBtn.style.transform = `translate(${x}px, ${y}px) scale(${Math.max(shrink, 0.3)})`;
+            }
+
+            // After 10 clicks, make NO button start spinning
+            if (noClickCount > 10) {
+                noBtn.style.animation = 'spin 1s linear infinite';
+            }
+
+            // After 15 clicks, change NO button text
+            if (noClickCount === 15) {
+                noBtn.textContent = 'Fine... Maybe?';
+            }
+            if (noClickCount === 20) {
+                noBtn.textContent = 'Okay... Yes?';
+            }
+            if (noClickCount === 25) {
+                noBtn.textContent = 'Just click YES! →';
+            }
+        });
+
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
