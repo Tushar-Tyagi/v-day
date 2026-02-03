@@ -294,7 +294,7 @@
         <div id="celebration" class="celebration hidden">
             <h2>🎉 YAAAAY! 🎉</h2>
             <p>I knew you'd say yes! You just made me the happiest person ever! 😍</p>
-            <img class="gif" src="https://media1.tenor.com/m/FcukYBYV8sgAAAAC/friends-phoebe.gif" alt="celebration">
+            <img class="gif" src="https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif" alt="celebration">
             <p style="font-size: 2rem;">❤️💕💖✨🎊</p>
             <p>Get ready for the best Valentine's Day ever! 🥰</p>
         </div>
@@ -377,6 +377,8 @@
 
         // NO button runs away from mouse
         let isNoBtnActive = true;
+        let escapeDistance = 100; // Distance at which button starts running away
+        
         document.addEventListener('mousemove', function(e) {
             if (!isNoBtnActive) return;
             
@@ -389,10 +391,10 @@
                 Math.pow(e.clientY - noBtnCenterY, 2)
             );
             
-            // If mouse is within 100px of the button, make it run away
-            if (distance < 100) {
+            // If mouse is within escape distance, make it run away (but not too far)
+            if (distance < escapeDistance && distance > 0) {
                 const angle = Math.atan2(noBtnCenterY - e.clientY, noBtnCenterX - e.clientX);
-                const moveDistance = 100 - distance;
+                const moveDistance = (escapeDistance - distance) * 0.5; // Move half the difference
                 
                 let newX = Math.cos(angle) * moveDistance;
                 let newY = Math.sin(angle) * moveDistance;
@@ -457,6 +459,9 @@
             const currentSize = 1 + (noClickCount * 0.1);
             yesBtn.style.transform = `scale(${currentSize})`;
 
+            // Make it easier to catch NO button as clicks increase (button gets slower at escaping)
+            escapeDistance = Math.max(50, 100 - (noClickCount * 3));
+
             // Show reasons list after 3 clicks
             if (noClickCount === 3) {
                 reasonsList.classList.add('show');
@@ -474,6 +479,10 @@
             // After 10 clicks, make NO button start spinning
             if (noClickCount > 10) {
                 noBtn.style.animation = 'spin 1s linear infinite';
+                // Make it stop running away after 10 clicks
+                if (noClickCount === 11) {
+                    isNoBtnActive = false;
+                }
             }
 
             // After 15 clicks, change NO button text
